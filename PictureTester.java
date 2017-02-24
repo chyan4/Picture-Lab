@@ -17,6 +17,7 @@ public class PictureTester
     beach.explore();
   }
   
+  
   /** Method to test mirrorVertical */
   public static void testMirrorVertical()
   {
@@ -51,6 +52,13 @@ public class PictureTester
     swan.explore();
   }
   
+  public static void testKeepOnlyBlue()
+  {
+	  Picture blueEyes = new Picture("images/White Lightning.jpg");
+	  blueEyes.keepOnlyBlue();
+	  blueEyes.explore();
+  }
+  
   /** Main method for testing.  Every class can have a main
     * method in Java */
   public static void main(String[] args)
@@ -59,7 +67,7 @@ public class PictureTester
     // and comment out the ones you don't want
     // to run
     testZeroBlue();
-    //testKeepOnlyBlue();
+    testKeepOnlyBlue();
     //testKeepOnlyRed();
     //testKeepOnlyGreen();
     //testNegate();
