@@ -747,5 +747,5 @@ public class SimplePicture implements DigitalPicture
      " height " + getHeight() + " width " + getWidth();
    return output;
  }
-
+ 
 } // end of SimplePicture class
