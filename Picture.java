@@ -320,30 +320,20 @@ public class Picture extends SimplePicture
    * @param startRow the start row to copy to
    * @param startCol the start col to copy to
    */
- public void copyWithBounds(Picture fromPic, 
-                int startRow, int startCol , int startCopyRow, 
-                int endCopyRow, int startCopyCol, int endCopyCol)
- {
-   Pixel fromPixel = null;
-   Pixel toPixel = null;
-   Pixel[][] toPixels = this.getPixels2D();
-   Pixel[][] fromPixels = fromPic.getPixels2D();
-   for (int fromRow = startCopyRow, toRow = startRow; 
-        fromRow < endCopyRow &&
-        toRow < toPixels.length; 
-        fromRow++, toRow++)
-   {
-     for (int fromCol = startCopyCol, toCol = startCol; 
-          fromCol < endCopyCol &&
-          toCol < toPixels[0].length;  
-          fromCol++, toCol++)
-     {
-       fromPixel = fromPixels[fromRow][fromCol];
-       toPixel = toPixels[toRow][toCol];
-       toPixel.setColor(fromPixel.getColor());
-     }
-   }   
- }
+  public void copyWithBounds(Picture fromPic, int startRow, int endRow, int startCol, int endCol) {
+		Pixel fromPixel = null;
+		Pixel toPixel = null;
+		Pixel[][] toPixels = this.getPixels2D();
+		Pixel[][] fromPixels = fromPic.getPixels2D();
+		for (int fromRow = 0, toRow = startRow; fromRow < endRow && toRow < endRow; fromRow++, toRow++) {
+			for (int fromCol = 0, toCol = startCol; fromCol < endCol && toCol < endCol; fromCol++, toCol++) {
+				fromPixel = fromPixels[fromRow][fromCol];
+				toPixel = toPixels[toRow][toCol];
+				toPixel.setColor(fromPixel.getColor());
+			}
+		}
+	}
+
   
  
   public void copy(Picture fromPic, 
@@ -390,33 +380,73 @@ public class Picture extends SimplePicture
   }
   
   
-  /** Method to show large changes in color 
-    * @param edgeDist the distance for finding edges
-    */
-  public void edgeDetection(int edgeDist)
-  {
-    Pixel leftPixel = null;
-    Pixel rightPixel = null;
-    Pixel[][] pixels = this.getPixels2D();
-    Color rightColor = null;
-    for (int row = 0; row < pixels.length; row++)
-    {
-      for (int col = 0; 
-           col < pixels[0].length-1; col++)
-      {
-        leftPixel = pixels[row][col];
-        rightPixel = pixels[row][col+1];
-        rightColor = rightPixel.getColor();
-        if (leftPixel.colorDistance(rightColor) > 
-            edgeDist)
-          leftPixel.setColor(Color.BLACK);
-        else
-          leftPixel.setColor(Color.WHITE);
-      }
-    }
-  }
+	/**
+	 * Method to show large changes in color
+	 * 
+	 * @param edgeDist
+	 *            the distance for finding edges
+	 */
+	public void edgeDetection(int edgeDist) {
+		Pixel leftPixel = null;
+		Pixel rightPixel = null;
+		Pixel upPixel = null;
+		Pixel downPixel = null;
+		Pixel[][] pixels = this.getPixels2D();
+		Color rightColor = null;
+		Color downColor = null;
+		for (int row = 0; row < pixels.length; row++) {
+			for (int col = 0; col < pixels[0].length - 1; col++) {
+				leftPixel = pixels[row][col];
+				rightPixel = pixels[row][col + 1];
+				rightColor = rightPixel.getColor();
+				if (leftPixel.colorDistance(rightColor) > edgeDist)
+					leftPixel.setColor(Color.BLACK);
+				else
+					leftPixel.setColor(Color.WHITE);
+				for (int i = 0; i < pixels.length - 2; i++) {
+					upPixel = pixels[i][col];
+					downPixel = pixels[i + 1][col];
+					downColor = downPixel.getColor();
+					if (upPixel.colorDistance(downColor) > edgeDist)
+						upPixel.setColor(Color.BLACK);
+					else
+						upPixel.setColor(Color.WHITE);
+				}
+			}
+		}
+	}
+
   
+  public void myCollage() {
+		Picture flower1 = new Picture("images/flower1.jpg");
+		Picture flower2 = new Picture("images/flower2.jpg");
+		Picture caterpillar = new Picture("images/caterpillar.jpg");
+		this.copyWithBounds(flower1, 0, 50, 0, 100);
+		this.copyWithBounds(flower2, 50, 100, 0, 100);
+		this.copyWithBounds(caterpillar, 100, 150, 0, 100);
+		Picture flower1Gray = new Picture(flower1);
+		flower1Gray.grayscale();
+		this.copyWithBounds(flower1Gray, 150, 200, 100, 200);
+		Picture flowerNoBlue = new Picture(flower2);
+		flowerNoBlue.zeroBlue();
+		this.copyWithBounds(flowerNoBlue, 200, 250, 100, 200);
+		Picture caterpillarHor = new Picture(caterpillar);
+		caterpillarHor.mirrorHorizontal();
+		this.copyWithBounds(caterpillarHor, 250, 300, 100, 200);
+		Picture flower1Negate = new Picture(flower1);
+		flower1Negate.negate();
+		this.copyWithBounds(flower1Negate, 300, 350, 200, 300);
+		Picture flower2OnlyBlue = new Picture(flower2);
+		flower2OnlyBlue.keepOnlyBlue();
+		this.copyWithBounds(flower2OnlyBlue, 350, 400, 200, 300);
+		Picture caterpillarDia = new Picture(caterpillar);
+		caterpillarDia.mirrorDiagonal();
+		this.copyWithBounds(caterpillarDia, 400, 450, 200, 300);
+		this.mirrorVertical();
+		this.write("images/collage.jpg");
+	}
   
+ 
   /* Main method for testing - each class in Java can have a main 
    * method 
    */
