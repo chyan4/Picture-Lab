@@ -124,10 +124,17 @@ public class PictureTester
     seagull.explore();
   }
   
+  public static void testMyCollage()
+  {
+	  Picture canvas = new Picture("images/640x480.jpg");
+	    canvas.myCollage();
+	    canvas.explore();
+  }
+  
   public static void testCopy()
   {
 	  Picture flowerOne = new Picture("images/flower1.jpg");
-	  flowerOne.copyWithBounds(flowerOne,0,0,0,50,0,75);
+	  flowerOne.copyWithBounds(flowerOne,0,50,0,75);
 	  flowerOne.explore();
   }
   
@@ -154,8 +161,9 @@ public class PictureTester
     testMirrorGull();
     testMirrorDiagonal();
     testCollage();
+    testMyCollage();
     testCopy();
-    //testEdgeDetection();
+    testEdgeDetection();
     //testEdgeDetection2();
     //testChromakey();
     //testEncodeAndDecode();
